@@ -17,11 +17,6 @@ public class Trig {
 
     // -> (-π/2, π/2)
     x = Math.IEEEremainder(x, Math.PI);
-    if (x > Math.PI / 2.0) {
-      x -= Math.PI;
-    } else if (x < -Math.PI / 2.0) {
-      x += Math.PI;
-    }
 
     // reduce argument
     boolean negative = x < 0.0;
@@ -39,7 +34,9 @@ public class Trig {
     // - tan^2(x))
     for (int i = 0; i < reductions; i++) {
       double denom = 1.0 - t * t;
-      if (denom == 0.0) {
+      System.out.println("denom " + denom);
+      if (Math.abs(denom) < 1e-15) {
+        System.out.println("small denom");
         return negative ? Double.NEGATIVE_INFINITY : Double.POSITIVE_INFINITY;
       }
       t = (2.0 * t) / denom;

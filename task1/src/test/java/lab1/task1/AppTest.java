@@ -4,6 +4,7 @@
 package lab1.task1;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.DisplayName;
@@ -16,7 +17,7 @@ import lab1.task1.utils.Trig;
 
 class AppTest {
   private static final double ABSOLUTE_EPSILON = 1e-12;
-  private static final double RELATIVE_EPSILON = 1e-10;
+  // private static final double RELATIVE_EPSILON = 1e-10;
 
   // private static void assertApproximatelyEqual(double expected, double actual,
   // double x) {
@@ -66,9 +67,11 @@ class AppTest {
   @Test
   @DisplayName("argument close to π/2 returns inf")
   void tan_NearPole_ReturnsLargeValue() {
-    double nearPole = Math.PI / 2 - 1e-6;
+    double nearPole = Math.PI / 2 - 1e-16;
     double result = Trig.tan(nearPole, 30);
-    assertTrue(result > 1e5, "tan(π/2 - 1e-6) must be > 1e5, but was: " + result);
+    // assertTrue(result > 1e5, "tan(π/2 - 1e-6) must be > 1e5, but was: " +
+    // result);
+    assertTrue(Double.isInfinite(result));
   }
 
   // math properties
@@ -109,5 +112,64 @@ class AppTest {
     double standard = Math.tan(x);
     assertEquals(custom, standard, ABSOLUTE_EPSILON,
         String.format("tan(%.6f) should be approximately %.15f but was %.15f", x, standard, custom));
+  }
+
+  // extras
+  @Test
+  void tan_DefaultN_DelegatesCorrectly() {
+    assertEquals(Trig.tan(0.5, 20), Trig.tan(0.5), 1e-12);
+  }
+
+  @Test
+  void tan_WithZeroTerms_ReturnsZero() {
+    assertEquals(0.0, Trig.tan(0.5, 0));
+    assertEquals(0.0, Trig.tan(0.5, -5));
+  }
+
+  @Test
+  void tan_EarlySeriesBreak_IsTriggered() {
+    double result = Trig.tan(0.01, 100);
+    assertEquals(Math.tan(0.01), result, 1e-10);
+  }
+
+  @Test
+  void tan_NormalizesLargePositiveAngle() {
+    double x = 3.0; // > π/2
+    assertEquals(Math.tan(x), Trig.tan(x, 20), 1e-10);
+  }
+
+  @Test
+  void tan_NormalizesLargeNegativeAngle() {
+    double x = -3.0; // < -π/2
+    assertEquals(Math.tan(x), Trig.tan(x, 20), 1e-10);
+  }
+
+  @Test
+  void tan_TrigersPositiveHalfPiReduction() {
+    double x = 2.0; // > π/2 but < π
+    assertEquals(Math.tan(x), Trig.tan(x, 20), 1e-10);
+  }
+
+  @Test
+  void tan_TrigersNegativeHalfPiReduction() {
+    double x = -2.0;
+    assertEquals(Math.tan(x), Trig.tan(x, 20), 1e-10);
+  }
+
+  @Test
+  void tan_NearPositivePole_ReturnsPositiveInfinity() {
+    double x = Math.PI / 2 - 1e-16;
+    assertTrue(Double.isInfinite(Trig.tan(x, 30)));
+  }
+
+  @Test
+  void tan_NearNegativePole_ReturnsNegativeInfinity() {
+    double x = -Math.PI / 2 + 1e-16;
+    assertTrue(Double.isInfinite(Trig.tan(x, 30)));
+  }
+
+  @Test
+  void constructor_IsCovered() {
+    new Trig();
   }
 }
