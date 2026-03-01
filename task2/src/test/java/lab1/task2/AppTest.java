@@ -76,4 +76,9 @@ class AppTest {
 
     assertEquals(expectedTrace, result.trace);
   }
+
+  @Test
+  void constructor_IsCovered() {
+    new BubbleSort();
+  }
 }
