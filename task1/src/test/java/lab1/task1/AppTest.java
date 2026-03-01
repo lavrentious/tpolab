@@ -4,7 +4,6 @@
 package lab1.task1;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.DisplayName;
@@ -112,6 +111,23 @@ class AppTest {
     double standard = Math.tan(x);
     assertEquals(custom, standard, ABSOLUTE_EPSILON,
         String.format("tan(%.6f) should be approximately %.15f but was %.15f", x, standard, custom));
+  }
+
+  // convergence
+  @ParameterizedTest
+  @ValueSource(doubles = { 0.1, 0.5, 0.7 })
+  @DisplayName("Convergence: higher n should yield lower or equal error")
+  void tan_HigherN_YieldsLowerError(double x) {
+    double previousError = Double.MAX_VALUE;
+
+    for (int n = 1; n <= 32; n++) {
+      double result = Trig.tan(x, n);
+      double actualError = Math.abs(result - Math.tan(x));
+      assertTrue(actualError <= previousError,
+          String.format("At n=%d, error (%.2e) increased from n=%d (%.2e) for x=%.2f",
+              n, actualError, n - 1, previousError, x));
+      previousError = actualError;
+    }
   }
 
   // extras
