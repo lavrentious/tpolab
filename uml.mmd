@@ -1,0 +1,139 @@
+classDiagram
+    %% Пакет Equipment
+    class PhysicalObject {
+        <<interface>>
+        +getWeightKg() int
+        +getName() String
+    }
+    class MilitaryEquipment {
+        <<abstract>>
+        -inventoryId: String
+        +getInventoryId() String
+    }
+    class Vehicle {
+        <<abstract>>
+        -wheelCount: int
+        -capacity: int
+        -crew: List~MilitaryPersonnel~
+        -loadedSquads: List~Squad~
+        +getWheelCount() int
+        +getCapacity() int
+        +getCrew() List~MilitaryPersonnel~
+        +getLoadedSquads() List~Squad~
+        +addCrewMember(MilitaryPersonnel)
+        +addSquad(Squad)
+        +removeSquad(Squad)
+        +removeCrewMember(MilitaryPersonnel)
+    }
+    class Tank {
+        -weightKg: int
+        -name: String
+        +getWeightKg() int
+        +getName() String
+    }
+    PhysicalObject <|.. MilitaryEquipment
+    MilitaryEquipment <|-- Vehicle
+    Vehicle <|-- Tank
+
+    %% Пакет Personnel
+    class Person {
+        <<abstract>>
+        -name: String
+        +getName() String
+    }
+    class MilitaryPersonnel {
+        <<abstract>>
+        -rank: MilitaryRank
+        +getRank() MilitaryRank
+        +giveOrder(Order, MilitaryPersonnel)
+        #receiveOrder(Order)*
+    }
+    class Commander {
+        #receiveOrder(Order)
+    }
+    class Soldier {
+        -liftingCapacityKg: int
+        +getLiftingCapacityKg() int
+        #receiveOrder(Order)
+    }
+    class MilitaryRank {
+        <<enumeration>>
+        PRIVATE
+        SERGEANT
+        LIEUTENANT
+        COMMANDER
+        +isHigherThan(MilitaryRank) boolean
+    }
+    class Squad {
+        -soldiers: List~Soldier~
+        +addSoldier(Soldier)
+        +getTotalStrength() int
+        +getSize() int
+        +getSoldiers() List~Soldier~
+    }
+
+    Person <|-- MilitaryPersonnel
+    MilitaryPersonnel <|-- Commander
+    MilitaryPersonnel <|-- Soldier
+    MilitaryPersonnel --> MilitaryRank : has
+    Squad o-- Soldier : aggregates
+    
+    %% Новые связи загрузки экипажа
+    Vehicle o-- MilitaryPersonnel : crew
+    Vehicle o-- Squad : loadedSquads
+
+    %% Пакет Command
+    class Action {
+        <<interface>>
+        +execute(PhysicalObject, Squad) AttemptResult
+        +getDescription() String
+    }
+    class LiftAction {
+        +execute(PhysicalObject, Squad) AttemptResult
+        +getDescription() String
+    }
+    class Order {
+        -action: Action
+        -subject: PhysicalObject
+        +getAction() Action
+        +getSubject() PhysicalObject
+    }
+    class AttemptResult {
+        <<enumeration>>
+        SUCCESS
+        FAILURE
+    }
+
+    Action <|.. LiftAction
+    Order --> Action : contains
+    Order --> PhysicalObject : targets
+
+    %% Пакет Simulation
+    class Task {
+        <<interface>>
+        +getDurationMs() long
+        +execute()
+        +getDescription() String
+    }
+    class LiftingAttemptTask {
+        -order: Order
+        -squad: Squad
+        -lastResult: AttemptResult
+        +getDurationMs() long
+        +execute()
+        +getDescription() String
+        +getLastResult() AttemptResult
+    }
+    class SimulationEngine {
+        -currentTime: long
+        -taskQueue: Queue~Task~
+        +scheduleTask(Task)
+        +runNext()
+        +runAll()
+        +getCurrentTime() long
+    }
+
+    Task <|.. LiftingAttemptTask
+    LiftingAttemptTask --> Order : executes
+    LiftingAttemptTask --> Squad : uses
+    SimulationEngine o-- Task : manages
