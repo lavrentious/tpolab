@@ -17,4 +17,8 @@ public class Squad {
   public int getSize() {
     return soldiers.size();
   }
+
+  public List<Soldier> getSoldiers() {
+    return soldiers;
+  }
 }

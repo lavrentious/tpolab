@@ -26,7 +26,7 @@ class SubordinationTest {
     commander = new Commander("Командир");
     privateIvanov = new Soldier("Иванов", 100);
     privatePetrov = new Soldier("Петров", 100);
-    dummyOrder = new Order(new LiftAction(), new Tank("T-1", "Танк", 1000));
+    dummyOrder = new Order(new LiftAction(), new Tank("T-1", "Танк", 1000, 4));
   }
 
   @Test

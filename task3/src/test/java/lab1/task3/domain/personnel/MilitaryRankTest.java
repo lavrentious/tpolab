@@ -31,7 +31,7 @@ public class MilitaryRankTest {
   @Test
   void commanderShouldReceiveOrderWithoutExceptions() {
     Commander commander = new Commander("Putin");
-    Order dummyOrder = new Order(new LiftAction(), new Tank("id", "tank", 100));
+    Order dummyOrder = new Order(new LiftAction(), new Tank("id", "tank", 100, 4));
     assertDoesNotThrow(() -> commander.receiveOrder(dummyOrder));
   }
 }

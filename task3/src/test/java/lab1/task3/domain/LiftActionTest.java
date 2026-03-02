@@ -22,7 +22,7 @@ class LiftActionTest {
       "100,   500,   SUCCESS" // weight < strength
   })
   void shouldCalculateLiftingResultCorrectly(int tankWeight, int strength, AttemptResult expected) {
-    Tank testTank = new Tank("test1", "test tank", tankWeight);
+    Tank testTank = new Tank("test1", "test tank", tankWeight, 4);
     Squad testSquad = new Squad();
     testSquad.addSoldier(new Soldier("test soldier", strength));
     LiftAction action = new LiftAction();

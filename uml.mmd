@@ -13,7 +13,17 @@ classDiagram
     class Vehicle {
         <<abstract>>
         -wheelCount: int
+        -capacity: int
+        -crew: List~MilitaryPersonnel~
+        -loadedSquads: List~Squad~
         +getWheelCount() int
+        +getCapacity() int
+        +getCrew() List~MilitaryPersonnel~
+        +getLoadedSquads() List~Squad~
+        +addCrewMember(MilitaryPersonnel)
+        +addSquad(Squad)
+        +removeSquad(Squad)
+        +removeCrewMember(MilitaryPersonnel)
     }
     class Tank {
         -weightKg: int
@@ -59,6 +69,7 @@ classDiagram
         +addSoldier(Soldier)
         +getTotalStrength() int
         +getSize() int
+        +getSoldiers() List~Soldier~
     }
 
     Person <|-- MilitaryPersonnel
@@ -66,6 +77,10 @@ classDiagram
     MilitaryPersonnel <|-- Soldier
     MilitaryPersonnel --> MilitaryRank : has
     Squad o-- Soldier : aggregates
+    
+    %% Новые связи загрузки экипажа
+    Vehicle o-- MilitaryPersonnel : crew
+    Vehicle o-- Squad : loadedSquads
 
     %% Пакет Command
     class Action {

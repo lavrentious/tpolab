@@ -31,7 +31,7 @@ class AppTest {
   void setUp() {
     engine = new SimulationEngine();
     commander = new Commander("Товарищ командир");
-    secretTank = new Tank("T-90", "Новый секретный танк", 46000);
+    secretTank = new Tank("T-90", "Новый секретный танк", 46000, 4);
     liftOrder = new Order(new LiftAction(), secretTank);
     activeSquad = new Squad();
   }

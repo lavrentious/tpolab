@@ -15,7 +15,7 @@ class LiftingAttemptTaskTest {
 
   @Test
   void shouldThrowExceptionIfResultRequestedBeforeExecution() {
-    Order order = new Order(new LiftAction(), new Tank("id", "tank", 100));
+    Order order = new Order(new LiftAction(), new Tank("id", "tank", 100, 4));
     LiftingAttemptTask task = new LiftingAttemptTask(order, new Squad());
 
     IllegalStateException exception = assertThrows(
