@@ -15,7 +15,8 @@ class NaturalLogarithm : AbstractFunction() {
             return BigDecimal.ZERO.setScale(precision.scale(), HALF_EVEN)
         }
 
-        val calculationScale = precision.scale() + 2
+        val calculationScale = precision.scale() + 8
+        val convergencePrecision = BigDecimal.ONE.movePointLeft(calculationScale)
         val z = x.subtract(BigDecimal.ONE).divide(x.add(BigDecimal.ONE), calculationScale, HALF_EVEN)
         val z2 = z.pow(2)
         var result = BigDecimal.ZERO
@@ -26,7 +27,7 @@ class NaturalLogarithm : AbstractFunction() {
             result = result.add(term.divide(BigDecimal.valueOf(i.toLong()), calculationScale, HALF_EVEN))
             term = term.multiply(z2)
             i += 2
-        } while (term.abs() > precision && i < seriesLength)
+        } while (term.abs() > convergencePrecision && i < seriesLength)
 
         return result.multiply(BigDecimal.valueOf(2)).setScale(precision.scale(), HALF_EVEN)
     }

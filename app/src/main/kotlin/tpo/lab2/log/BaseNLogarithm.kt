@@ -16,8 +16,9 @@ class BaseNLogarithm(
             throw ArithmeticException("Logarithm base $base is undefined for x = $x")
         }
 
-        val numerator = naturalLogarithm.calculate(x, precision)
-        val denominator = naturalLogarithm.calculate(BigDecimal.valueOf(base.toLong()), precision)
+        val intermediatePrecision = precision.setScale(precision.scale() + 4, HALF_EVEN)
+        val numerator = naturalLogarithm.calculate(x, intermediatePrecision)
+        val denominator = naturalLogarithm.calculate(BigDecimal.valueOf(base.toLong()), intermediatePrecision)
         val result = numerator.divide(denominator, MathContext.DECIMAL128.precision, HALF_EVEN)
 
         return result.setScale(precision.scale(), HALF_EVEN)
