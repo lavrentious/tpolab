@@ -2,9 +2,8 @@ from __future__ import annotations
 
 import csv
 import math
-from decimal import Decimal, ROUND_HALF_EVEN
+from decimal import ROUND_HALF_EVEN, Decimal
 from pathlib import Path
-
 
 ROOT = Path(__file__).resolve().parents[1]
 RESOURCES = ROOT / "app" / "src" / "test" / "resources"
