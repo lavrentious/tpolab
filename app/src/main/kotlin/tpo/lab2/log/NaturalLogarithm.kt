@@ -9,7 +9,7 @@ class NaturalLogarithm : AbstractFunction() {
         validateOrThrow(x, precision)
 
         if (x <= BigDecimal.ZERO) {
-            throw ArithmeticException("Natural logarithm is undefined for x = $x")
+            throw ArithmeticException("ln: bad x = $x")
         }
         if (x.compareTo(BigDecimal.ONE) == 0) {
             return BigDecimal.ZERO.setScale(precision.scale(), HALF_EVEN)

@@ -14,7 +14,7 @@ class Secant(
         val cos = cosine.calculate(x, intermediatePrecision)
 
         if (cos.abs() < precision) {
-            throw ArithmeticException("Secant is undefined for x = $x")
+            throw ArithmeticException("sec: bad x = $x")
         }
 
         return BigDecimal.ONE.divide(cos, precision.scale(), HALF_EVEN)

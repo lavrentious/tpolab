@@ -13,7 +13,7 @@ class BaseNLogarithm(
         validateOrThrow(x, precision)
 
         if (x <= BigDecimal.ZERO) {
-            throw ArithmeticException("Logarithm base $base is undefined for x = $x")
+            throw ArithmeticException("log base $base: bad x = $x")
         }
 
         val intermediatePrecision = precision.setScale(precision.scale() + 4, HALF_EVEN)

@@ -16,7 +16,7 @@ class Tangent(
         val cos = cosine.calculate(x, intermediatePrecision)
 
         if (cos.abs() < precision) {
-            throw ArithmeticException("Tangent is undefined for x = $x")
+            throw ArithmeticException("tan: bad x = $x")
         }
 
         return sin.divide(cos, precision.scale(), HALF_EVEN)

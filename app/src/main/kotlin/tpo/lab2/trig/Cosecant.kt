@@ -14,7 +14,7 @@ class Cosecant(
         val sin = sine.calculate(x, intermediatePrecision)
 
         if (sin.abs() < precision) {
-            throw ArithmeticException("Cosecant is undefined for x = $x")
+            throw ArithmeticException("csc: bad x = $x")
         }
 
         return BigDecimal.ONE.divide(sin, precision.scale(), HALF_EVEN)

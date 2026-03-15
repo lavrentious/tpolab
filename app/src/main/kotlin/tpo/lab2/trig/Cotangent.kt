@@ -16,7 +16,7 @@ class Cotangent(
         val cos = cosine.calculate(x, intermediatePrecision)
 
         if (sin.abs() < precision) {
-            throw ArithmeticException("Cotangent is undefined for x = $x")
+            throw ArithmeticException("cot: bad x = $x")
         }
 
         return cos.divide(sin, precision.scale(), HALF_EVEN)
