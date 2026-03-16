@@ -1,0 +1,135 @@
+classDiagram
+direction TB
+
+class FunctionRule {
+  <<interface>>
+  +calculate(x: BigDecimal, precision: BigDecimal) BigDecimal
+}
+
+class AbstractFunction {
+  <<abstract>>
+  +MAX_ITERATIONS: Int
+  #seriesLength: Int
+  #validateOrThrow(x: BigDecimal, precision: BigDecimal) Unit
+}
+
+class App {
+  -outputDir: String
+  -mainFunction: MainFunction
+  +calculate(x: BigDecimal, precision: BigDecimal) BigDecimal
+  +setOutputDir(path: String) Unit
+  +generateFunctionData(precision: BigDecimal, rangeStart: BigDecimal, rangeEnd: BigDecimal, step: BigDecimal) Unit
+  -buildFunctions() List~AbstractFunction~
+}
+
+class CliOptions {
+  +outputDir: String
+  +precision: BigDecimal
+  +rangeStart: BigDecimal
+  +rangeEnd: BigDecimal
+  +step: BigDecimal
+}
+
+class MathConstants {
+  <<object>>
+  +PI: BigDecimal
+}
+
+class MainFunction {
+  -cosine: Cosine
+  -tangent: Tangent
+  -cotangent: Cotangent
+  -secant: Secant
+  -cosecant: Cosecant
+  -naturalLogarithm: NaturalLogarithm
+  -log3: BaseNLogarithm
+  -log5: BaseNLogarithm
+  -log10: BaseNLogarithm
+  +calculate(x: BigDecimal, precision: BigDecimal) BigDecimal
+  -calculateTrigBranch(x: BigDecimal, precision: BigDecimal) BigDecimal
+  -calculateLogBranch(x: BigDecimal, precision: BigDecimal) BigDecimal
+}
+
+class NaturalLogarithm {
+  +calculate(x: BigDecimal, precision: BigDecimal) BigDecimal
+}
+
+class BaseNLogarithm {
+  -base: Int
+  -naturalLogarithm: NaturalLogarithm
+  +calculate(x: BigDecimal, precision: BigDecimal) BigDecimal
+}
+
+class Sine {
+  +calculate(x: BigDecimal, precision: BigDecimal) BigDecimal
+  -minusOnePower(n: Int) BigDecimal
+}
+
+class Cosine {
+  -sine: Sine
+  +calculate(x: BigDecimal, precision: BigDecimal) BigDecimal
+}
+
+class Tangent {
+  -sine: Sine
+  -cosine: Cosine
+  +calculate(x: BigDecimal, precision: BigDecimal) BigDecimal
+}
+
+class Cotangent {
+  -sine: Sine
+  -cosine: Cosine
+  +calculate(x: BigDecimal, precision: BigDecimal) BigDecimal
+}
+
+class Secant {
+  -cosine: Cosine
+  +calculate(x: BigDecimal, precision: BigDecimal) BigDecimal
+}
+
+class Cosecant {
+  -sine: Sine
+  +calculate(x: BigDecimal, precision: BigDecimal) BigDecimal
+}
+
+class CSVGraphWriter {
+  -writer: BufferedWriter
+  -function: AbstractFunction
+  +filePath: String
+  +write(x1: BigDecimal, x2: BigDecimal, d: BigDecimal, precision: BigDecimal) Unit
+}
+
+FunctionRule <|.. AbstractFunction
+AbstractFunction <|-- MainFunction
+AbstractFunction <|-- NaturalLogarithm
+AbstractFunction <|-- BaseNLogarithm
+AbstractFunction <|-- Sine
+AbstractFunction <|-- Cosine
+AbstractFunction <|-- Tangent
+AbstractFunction <|-- Cotangent
+AbstractFunction <|-- Secant
+AbstractFunction <|-- Cosecant
+
+App *-- MainFunction
+App ..> AbstractFunction : builds
+App ..> CSVGraphWriter : uses
+App ..> CliOptions : creates
+
+MainFunction *-- Cosine
+MainFunction *-- Tangent
+MainFunction *-- Cotangent
+MainFunction *-- Secant
+MainFunction *-- Cosecant
+MainFunction *-- NaturalLogarithm
+MainFunction *-- BaseNLogarithm
+
+BaseNLogarithm *-- NaturalLogarithm
+Cosine *-- Sine
+Cosine ..> MathConstants : uses PI
+Tangent *-- Sine
+Tangent *-- Cosine
+Cotangent *-- Sine
+Cotangent *-- Cosine
+Secant *-- Cosine
+Cosecant *-- Sine
+CSVGraphWriter *-- AbstractFunction
