@@ -16,8 +16,8 @@ data class Coordinates(
             val fragment = url.substringAfter('#', missingDelimiterValue = "")
             val params = parseFragmentParameters(fragment)
 
-            val latitude = parseCoordinate(params, "lat", "Latitude", url)
-            val longitude = parseCoordinate(params, "lon", "Longitude", url)
+            val latitude = parseCoordinate(params, "lat", "lat", url)
+            val longitude = parseCoordinate(params, "lon", "lon", url)
 
             return Coordinates(latitude, longitude)
         }
@@ -46,8 +46,8 @@ data class Coordinates(
             fieldName: String,
             url: String,
         ): Double {
-            val value = params[key] ?: error("$fieldName not found in URL fragment: $url")
-            return value.toDoubleOrNull() ?: error("$fieldName is not a valid number in URL fragment: $url")
+            val value = params[key] ?: error("$fieldName missing in url: $url")
+            return value.toDoubleOrNull() ?: error("$fieldName invalid in url: $url")
         }
     }
 }

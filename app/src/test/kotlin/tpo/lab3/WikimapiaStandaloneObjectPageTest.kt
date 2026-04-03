@@ -10,27 +10,27 @@ class WikimapiaStandaloneObjectPageTest : BaseUiTest() {
 
         assertTrue(
             objectPage.title().contains("Tomb of the Unknown Soldier"),
-            "Expected the object page to display the selected object's title.",
+            "object title mismatch",
         )
         assertTrue(
             objectPage.description().contains("war memorial"),
-            "Expected the object page description to include the object's details.",
+            "object description mismatch",
         )
         assertTrue(
             objectPage.photoCount() > 0,
-            "Expected the object page to display at least one photo.",
+            "object has no photos",
         )
         assertTrue(
             objectPage.categories().contains("grave") &&
                 objectPage.categories().contains("war memorial"),
-            "Expected the object page to list the main categories.",
+            "object categories mismatch",
         )
         if (objectPage.isCommentDialogVisible()) {
             objectPage.closeCommentDialog()
 
             assertTrue(
                 objectPage.title().contains("Tomb of the Unknown Soldier"),
-                "Expected the object page content to remain available after closing the dialog overlay.",
+                "object content changed after dialog close",
             )
         }
     }

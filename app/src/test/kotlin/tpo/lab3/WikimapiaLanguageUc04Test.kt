@@ -15,11 +15,11 @@ class WikimapiaLanguageUc04Test : BaseUiTest() {
 
         assertTrue(
             initialAddPlaceLabel.contains("Add place"),
-            "Expected the initial interface label to be in English, but got '$initialAddPlaceLabel'.",
+            "initial label not english",
         )
         assertTrue(
             updatedAddPlaceLabel.contains("Добавить"),
-            "Expected the visible interface labels to switch to Russian, but got '$updatedAddPlaceLabel'.",
+            "label not russian",
         )
     }
 }

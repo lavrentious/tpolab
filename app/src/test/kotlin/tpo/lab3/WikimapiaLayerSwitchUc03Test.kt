@@ -17,15 +17,15 @@ class WikimapiaLayerSwitchUc03Test : BaseUiTest() {
 
         assertTrue(
             initialSelectedLayer.contains("wikimapia-imagetiles-map-preview"),
-            "Expected the map layer to be selected before switching layers.",
+            "initial layer not selected",
         )
         assertTrue(
             updatedSelectedLayer.contains("google-satellite-preview"),
-            "Expected the satellite layer to become the selected layer, but got '$updatedSelectedLayer'.",
+            "satellite layer not selected: '$updatedSelectedLayer'",
         )
         assertTrue(
             updatedMode.isNotBlank() && updatedMode != initialMode,
-            "Expected the URL map mode to change after switching to satellite, but got '$initialMode' -> '$updatedMode'.",
+            "map mode did not change: '$initialMode' -> '$updatedMode'",
         )
     }
 }

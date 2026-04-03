@@ -11,31 +11,31 @@ class WikimapiaObjectInfoUc02Test : BaseUiTest() {
 
         assertTrue(
             mapPage.isInfoBoxOpen(),
-            "Expected clicking an object contour on the map to open the info box.",
+            "infobox did not open",
         )
         assertTrue(
             mapPage.infoBoxTitle().contains("Trinity Tower"),
-            "Expected the info box to display the selected object's title.",
+            "infobox title mismatch: '${mapPage.infoBoxTitle()}'",
         )
         assertTrue(
             mapPage.infoBoxDescription().contains("Moscow Kremlin"),
-            "Expected the info box description to include object details.",
+            "infobox description mismatch: '${mapPage.infoBoxDescription()}'",
         )
         assertTrue(
             mapPage.infoBoxPhotoCount() > 0,
-            "Expected the info box to display at least one photo.",
+            "infobox has no photos",
         )
         assertTrue(
             mapPage.infoBoxCategories().contains("tower") &&
                 mapPage.infoBoxCategories().contains("listed building / architectural heritage"),
-            "Expected the info box to list the main categories.",
+            "infobox categories mismatch: '${mapPage.infoBoxCategories()}'",
         )
 
         mapPage.closeInfoBox()
 
         assertTrue(
             !mapPage.isInfoBoxOpen(),
-            "Expected the info box to close and return the user to the map.",
+            "infobox did not close",
         )
     }
 }

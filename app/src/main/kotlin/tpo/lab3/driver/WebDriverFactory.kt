@@ -14,7 +14,7 @@ object WebDriverFactory {
         val driver = when (config.browser) {
             "chrome" -> createChromeDriver(config.headless)
             "firefox" -> createFirefoxDriver(config.headless)
-            else -> error("Unsupported browser '${config.browser}'. Supported values: chrome, firefox.")
+            else -> error("unsupported browser '${config.browser}', use chrome or firefox")
         }
 
         driver.manage().timeouts().implicitlyWait(Duration.ZERO)

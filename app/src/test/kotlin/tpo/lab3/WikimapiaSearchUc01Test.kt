@@ -16,19 +16,19 @@ class WikimapiaSearchUc01Test : BaseUiTest() {
 
         assertTrue(
             searchResults.hasAnyResults(),
-            "Expected search results to contain at least one object on the live site.",
+            "search returned no results",
         )
 
         val updatedCoordinates = searchResults.selectFirstResult()
 
         assertTrue(
             updatedCoordinates.differsFrom(initialCoordinates),
-            "Expected the map to move after selecting a search result.",
+            "map did not move after search select",
         )
         assertTrue(
             URLDecoder.decode(driver.currentUrl, StandardCharsets.UTF_8)
                 .contains("search=$searchQuery"),
-            "Expected the search query to remain visible in the URL.",
+            "search query missing in url",
         )
     }
 }

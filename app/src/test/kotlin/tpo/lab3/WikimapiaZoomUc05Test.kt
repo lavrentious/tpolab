@@ -20,15 +20,15 @@ class WikimapiaZoomUc05Test : BaseUiTest() {
         assertEquals(
             initialZoomLevel + 1,
             updatedZoomLevel,
-            "Expected clicking the zoom in control to increase the zoom level by one.",
+            "zoom did not increase by 1",
         )
         assertTrue(
             !updatedCoordinates.differsFrom(initialCoordinates),
-            "Expected zooming in through the control to keep the map centered on the same location.",
+            "map center changed after zoom",
         )
         assertTrue(
             updatedUrl.contains("z=$updatedZoomLevel"),
-            "Expected the updated zoom level to be reflected in the URL, but got '$updatedUrl'.",
+            "zoom missing in url: '$updatedUrl'",
         )
     }
 }

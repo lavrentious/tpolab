@@ -128,7 +128,7 @@ class WikimapiaMapObjectInfoPage(
         driver.get("$baseUrl/#${params.joinToString("&")}")
 
         check(waitForInfoBoxToOpen()) {
-            "Expected the map to open an info box for '$objectPath'."
+            "infobox did not open for '$objectPath'"
         }
     }
 

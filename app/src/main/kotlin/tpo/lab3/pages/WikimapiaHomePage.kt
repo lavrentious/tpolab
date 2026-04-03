@@ -45,7 +45,7 @@ class WikimapiaHomePage(
             .firstOrNull { it.startsWith("z=") }
             ?.substringAfter('=')
             ?.toIntOrNull()
-            ?: error("Zoom level not found in URL fragment: ${currentUrl()}")
+            ?: error("zoom missing in url: ${currentUrl()}")
     }
 
     fun currentMapMode(): String {
@@ -83,7 +83,7 @@ class WikimapiaHomePage(
         Actions(driver).moveToElement(switcher).pause(java.time.Duration.ofMillis(300)).perform()
         val option = wait.until { webDriver ->
             webDriver.findElements(satelliteOption).firstOrNull()
-        } ?: error("Expected the satellite layer option to be present in the layer switcher.")
+        } ?: error("satellite option missing")
 
         triggerElementClick(option)
         wait.until { selectedLayerPreviewClass().contains("google-satellite-preview") }
@@ -118,13 +118,13 @@ class WikimapiaHomePage(
                 return text || '';
                 """.trimIndent(),
             )?.toString()).orEmpty().takeIf { it.isNotBlank() }
-        } ?: error("Expected the Add place control label to be available.")
+        } ?: error("add place label missing")
 
     fun switchToRussianLanguage(): WikimapiaHomePage {
         val menuToggle = wait.until { webDriver ->
             webDriver.findElements(languageMenuToggle)
                 .firstOrNull { it.isDisplayed }
-        } ?: error("Expected the header language selector to be present.")
+        } ?: error("language selector missing")
 
         hoverElement(menuToggle)
 
@@ -134,7 +134,7 @@ class WikimapiaHomePage(
 
         if (!clickVisibleTextWithRetry("Russian", "Русский")) {
             if (!addPlaceLabel().contains("Добавить")) {
-                error("Expected to switch language via the UI after opening 'More languages'. Visible texts: ${visibleTextSnapshot()}")
+                error("language switch failed")
             }
         }
 
