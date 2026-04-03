@@ -10,7 +10,7 @@ data class TestConfig(
             TestConfig(
                 baseUrl = System.getProperty("baseUrl", "https://wikimapia.org"),
                 browser = System.getProperty("browser", "chrome").lowercase(),
-                headless = System.getProperty("headless", "true").toBooleanStrictOrNull() ?: true,
+                headless = System.getProperty("headless", "false").toBooleanStrictOrNull() ?: false,
             )
     }
 }
