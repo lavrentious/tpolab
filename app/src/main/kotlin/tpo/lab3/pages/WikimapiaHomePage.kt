@@ -13,6 +13,7 @@ class WikimapiaHomePage(
     private val searchInput = By.xpath("//input[@id='search-input' or @type='text']")
     private val searchSubmitButton = By.xpath("//button[@id='search-submit']")
     private val mapSwitcherButton = By.xpath("//*[@id='wm-button-27' or @id='wm-MapSwitcher']")
+    private val zoomInButton = By.id("wm-zoomControl-zoom-in")
     private val satelliteOption =
         By.xpath("//*[contains(concat(' ', normalize-space(@class), ' '), ' switcher-preview ') and contains(concat(' ', normalize-space(@class), ' '), ' google-satellite-preview ')]")
     private val languageMenuToggle =
@@ -37,6 +38,15 @@ class WikimapiaHomePage(
     }
 
     fun currentCoordinates(): Coordinates = Coordinates.fromUrl(currentUrl())
+
+    fun currentZoomLevel(): Int {
+        val fragment = currentUrl().substringAfter('#', "")
+        return fragment.split('&')
+            .firstOrNull { it.startsWith("z=") }
+            ?.substringAfter('=')
+            ?.toIntOrNull()
+            ?: error("Zoom level not found in URL fragment: ${currentUrl()}")
+    }
 
     fun currentMapMode(): String {
         val fragment = currentUrl().substringAfter('#', "")
@@ -77,6 +87,13 @@ class WikimapiaHomePage(
 
         triggerElementClick(option)
         wait.until { selectedLayerPreviewClass().contains("google-satellite-preview") }
+        return this
+    }
+
+    fun zoomIn(): WikimapiaHomePage {
+        val initialZoomLevel = currentZoomLevel()
+        clickElement(waitUntilClickable(zoomInButton))
+        wait.until { currentZoomLevel() > initialZoomLevel }
         return this
     }
 
