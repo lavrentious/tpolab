@@ -11,13 +11,16 @@ class WikimapiaMapObjectInfoPage(
     private val baseUrl: String,
 ) : BasePage(driver) {
     private val searchInput = By.id("search-input")
-    private val polygonLocator = By.cssSelector("#vector-root path[cursor='pointer']")
+    private val polygonLocator = By.xpath("//*[@id='vector-root']//*[name()='path' and @cursor='pointer']")
     private val tooltipLocator = By.id("wm-tooltip")
-    private val infoPanelLocator = By.cssSelector(".wm-panel.panel-left")
-    private val infoPanelFrameLocator = By.cssSelector(".wm-panel.panel-left iframe")
-    private val infoPanelCloseButton = By.cssSelector(".wm-panel.panel-left .control-button.close")
+    private val infoPanelLocator =
+        By.xpath("//*[contains(concat(' ', normalize-space(@class), ' '), ' wm-panel ') and contains(concat(' ', normalize-space(@class), ' '), ' panel-left ')]")
+    private val infoPanelFrameLocator =
+        By.xpath("//*[contains(concat(' ', normalize-space(@class), ' '), ' wm-panel ') and contains(concat(' ', normalize-space(@class), ' '), ' panel-left ')]//iframe")
+    private val infoPanelCloseButton =
+        By.xpath("//*[contains(concat(' ', normalize-space(@class), ' '), ' wm-panel ') and contains(concat(' ', normalize-space(@class), ' '), ' panel-left ')]//*[contains(concat(' ', normalize-space(@class), ' '), ' control-button ') and contains(concat(' ', normalize-space(@class), ' '), ' close ')]")
     private val infoTitleLocator = By.tagName("h1")
-    private val photoLinksLocator = By.cssSelector("a[href*='photos.wikimapia.org']")
+    private val photoLinksLocator = By.xpath("//a[contains(@href, 'photos.wikimapia.org')]")
     private val categoriesLocator = By.tagName("strong")
 
     fun openAtCenter(lat: Double, lon: Double): WikimapiaMapObjectInfoPage {
@@ -90,8 +93,8 @@ class WikimapiaMapObjectInfoPage(
         val polygonsAvailable = try {
             wait.until {
                 ((driver as JavascriptExecutor).executeScript(
-                    "return document.querySelectorAll('#vector-root path[cursor=\"pointer\"]').length;",
-                ) as Long) > 0
+                    "return document.evaluate(\"count(//*[@id='vector-root']//*[name()='path' and @cursor='pointer'])\", document, null, XPathResult.NUMBER_TYPE, null).numberValue;",
+                ) as Number).toInt() > 0
             }
         } catch (_: TimeoutException) {
             false
