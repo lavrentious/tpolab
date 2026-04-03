@@ -9,7 +9,19 @@ import java.util.stream.Stream
 class WikimapiaLanguageUc04Test : BaseUiTest() {
     @ParameterizedTest(name = "switching to {0}")
     @MethodSource("languages")
-    fun `uc04 switching interface language updates visible labels`(language: WikimapiaHomePage.Language) {
+    fun `uc04 initial add place label is english`(language: WikimapiaHomePage.Language) {
+        val homePage = openHomePageAt(55.75396, 37.620393)
+        val initialAddPlaceLabel = homePage.addPlaceLabel()
+
+        assertTrue(
+            initialAddPlaceLabel.contains("Add place"),
+            "initial label not english",
+        )
+    }
+
+    @ParameterizedTest(name = "switching to {0}")
+    @MethodSource("languages")
+    fun `uc04 switching interface language changes add place label`(language: WikimapiaHomePage.Language) {
         val homePage = openHomePageAt(55.75396, 37.620393)
         val initialAddPlaceLabel = homePage.addPlaceLabel()
 
@@ -17,10 +29,6 @@ class WikimapiaLanguageUc04Test : BaseUiTest() {
 
         val updatedAddPlaceLabel = homePage.addPlaceLabel()
 
-        assertTrue(
-            initialAddPlaceLabel.contains("Add place"),
-            "initial label not english",
-        )
         assertTrue(
             updatedAddPlaceLabel != initialAddPlaceLabel,
             "label did not change for ${language.code}",

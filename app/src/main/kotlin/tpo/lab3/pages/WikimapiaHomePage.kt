@@ -132,13 +132,7 @@ class WikimapiaHomePage(
                 .firstOrNull { it.isDisplayed }
         } ?: error("language selector missing")
 
-        hoverElement(menuToggle)
-
-        if (!clickVisibleText("more languages", "More languages", "More Languages")) {
-            hoverElement(menuToggle)
-        }
-
-        if (!clickVisibleTextWithRetry(*language.optionLabels.toTypedArray())) {
+        if (!openLanguageOption(menuToggle, language)) {
             if (currentLanguage() != language.code && addPlaceLabel() == initialAddPlaceLabel) {
                 error("language switch failed")
             }
@@ -155,9 +149,11 @@ class WikimapiaHomePage(
         Actions(driver).moveToElement(element).pause(java.time.Duration.ofMillis(300)).perform()
     }
 
-    private fun clickVisibleTextWithRetry(vararg labels: String, attempts: Int = 10): Boolean {
+    private fun openLanguageOption(menuToggle: WebElement, language: Language, attempts: Int = 10): Boolean {
         repeat(attempts) {
-            if (clickVisibleText(*labels)) {
+            hoverElement(menuToggle)
+            clickVisibleText("more languages", "More languages", "More Languages")
+            if (clickVisibleText(*language.optionLabels.toTypedArray())) {
                 return true
             }
             Thread.sleep(300)
