@@ -10,6 +10,11 @@ class WikimapiaHomePage(
     driver: WebDriver,
     private val baseUrl: String,
 ) : BasePage(driver) {
+    data class Language(
+        val code: String,
+        val optionLabels: List<String>,
+    )
+
     private val searchInput = By.xpath("//input[@id='search-input' or @type='text']")
     private val searchSubmitButton = By.xpath("//button[@id='search-submit']")
     private val mapSwitcherButton = By.xpath("//*[@id='wm-button-27' or @id='wm-MapSwitcher']")
@@ -120,7 +125,8 @@ class WikimapiaHomePage(
             )?.toString()).orEmpty().takeIf { it.isNotBlank() }
         } ?: error("add place label missing")
 
-    fun switchToRussianLanguage(): WikimapiaHomePage {
+    fun switchToLanguage(language: Language): WikimapiaHomePage {
+        val initialAddPlaceLabel = addPlaceLabel()
         val menuToggle = wait.until { webDriver ->
             webDriver.findElements(languageMenuToggle)
                 .firstOrNull { it.isDisplayed }
@@ -132,13 +138,16 @@ class WikimapiaHomePage(
             hoverElement(menuToggle)
         }
 
-        if (!clickVisibleTextWithRetry("Russian", "Русский")) {
-            if (!addPlaceLabel().contains("Добавить")) {
+        if (!clickVisibleTextWithRetry(*language.optionLabels.toTypedArray())) {
+            if (currentLanguage() != language.code && addPlaceLabel() == initialAddPlaceLabel) {
                 error("language switch failed")
             }
         }
 
-        wait.until { addPlaceLabel().contains("Добавить") }
+        wait.until {
+            currentLanguage() == language.code &&
+                addPlaceLabel() != initialAddPlaceLabel
+        }
         return this
     }
 
