@@ -5,6 +5,8 @@ import org.openqa.selenium.JavascriptExecutor
 import org.openqa.selenium.TimeoutException
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.WebElement
+import java.net.URLDecoder
+import java.nio.charset.StandardCharsets
 
 class WikimapiaMapObjectInfoPage(
     driver: WebDriver,
@@ -30,7 +32,7 @@ class WikimapiaMapObjectInfoPage(
     }
 
     fun openInfoBox(expectedTooltip: String, objectPath: String): WikimapiaMapObjectInfoPage {
-        if (!tryOpenInfoBoxByClick(expectedTooltip)) {
+        if (!tryOpenInfoBoxByClick(expectedTooltip, objectPath)) {
             openInfoBoxFromHash(objectPath)
         }
         return this
@@ -89,7 +91,7 @@ class WikimapiaMapObjectInfoPage(
         return withinFrame(infoPanelFrameLocator, action)
     }
 
-    private fun tryOpenInfoBoxByClick(expectedTooltip: String): Boolean {
+    private fun tryOpenInfoBoxByClick(expectedTooltip: String, objectPath: String): Boolean {
         val polygonsAvailable = try {
             wait.until {
                 ((driver as JavascriptExecutor).executeScript(
@@ -114,7 +116,7 @@ class WikimapiaMapObjectInfoPage(
         } ?: return false
 
         triggerElementClick(polygon)
-        return waitForInfoBoxToOpen()
+        return waitForInfoBoxToOpen(objectPath)
     }
 
     private fun openInfoBoxFromHash(objectPath: String) {
@@ -127,21 +129,30 @@ class WikimapiaMapObjectInfoPage(
 
         driver.get("$baseUrl/#${params.joinToString("&")}")
 
-        check(waitForInfoBoxToOpen()) {
+        check(waitForInfoBoxToOpen(objectPath)) {
             "infobox did not open for '$objectPath'"
         }
     }
 
-    private fun waitForInfoBoxToOpen(): Boolean =
+    private fun waitForInfoBoxToOpen(objectPath: String): Boolean =
         try {
-            wait.until { currentUrl().contains("show=/") }
             wait.until { webDriver ->
-                webDriver.findElements(infoPanelLocator).any { it.isDisplayed }
+                val decodedUrl = URLDecoder.decode(webDriver.currentUrl ?: "", StandardCharsets.UTF_8)
+                decodedUrl.contains("show=$objectPath") || isInfoPanelVisible(webDriver)
+            }
+            wait.until { webDriver ->
+                isInfoPanelVisible(webDriver)
             }
             true
         } catch (_: TimeoutException) {
             false
         }
+
+    private fun isInfoPanelVisible(webDriver: WebDriver): Boolean {
+        val panelVisible = webDriver.findElements(infoPanelLocator).any { it.isDisplayed }
+        val frameVisible = webDriver.findElements(infoPanelFrameLocator).any { it.isDisplayed }
+        return panelVisible && frameVisible
+    }
 
     private fun matchesTooltip(polygon: WebElement, expectedTooltip: String): Boolean {
         (driver as JavascriptExecutor).executeScript(

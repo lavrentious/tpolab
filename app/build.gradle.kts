@@ -36,6 +36,12 @@ application {
 tasks.named<Test>("test") {
     useJUnitPlatform()
 
+    maxParallelForks = providers
+        .systemProperty("test.maxParallelForks")
+        .orNull
+        ?.toIntOrNull()
+        ?: (Runtime.getRuntime().availableProcessors() / 2).coerceAtLeast(1)
+
     listOf("browser", "headless", "baseUrl").forEach { propertyName ->
         providers.systemProperty(propertyName).orNull?.let { propertyValue ->
             systemProperty(propertyName, propertyValue)
