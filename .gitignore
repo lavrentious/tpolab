@@ -1,8 +1,18 @@
-# Ignore Gradle project-specific cache directory
-.gradle
+# JMeter generated HTML reports (large, auto-generated via -e -o flags)
+jmeter-report/
 
-# Ignore Gradle build output directory
-build
+# JMeter logs
+jmeter.log
+*.log
 
-# Ignore Kotlin plugin data
-.kotlin
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+
+# Typst compiled output
+report/*.pdf
